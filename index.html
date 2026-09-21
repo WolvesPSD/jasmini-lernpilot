@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="de-CH">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Datensparsamer statischer Lernpilot für Familien.">
+    <title>Familien-Lernpilot</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Zum Inhalt</a>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Lokaler Stand dieses Browsers · neu ohne Einträge</p>
+        <h1>Familien-Lernpilot</h1>
+      </div>
+      <label class="profile-picker">Profil
+        <select id="profile-select" aria-label="Profil auswählen"></select>
+      </label>
+    </header>
+
+    <main id="main">
+      <section class="notice" aria-label="Hinweis zum Pilot">
+        <strong>Pilot starten, wenn es passt – eine Ergänzung zur Schule, keine zweite Schule.</strong>
+        <span>Der vierwöchige Vorschlag braucht kein festes Startdatum: 3 kurze Einheiten pro Woche, höchstens 10–15 Minuten. Auslassen zählt nicht als Fehler.</span>
+      </section>
+
+      <nav class="tabs" aria-label="Bereich auswählen">
+        <button class="tab is-active" data-view="tasks" type="button">Aufgaben</button>
+        <button class="tab" data-view="numbers" type="button">Zahlen 1–100</button>
+        <button class="tab" data-view="parent" type="button">Elternübersicht</button>
+        <button class="tab" data-view="data" type="button">Lokaler Stand</button>
+      </nav>
+
+      <section id="tasks-view" class="view">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Vier Wochen · flexibler Start · generische Beispiele</p>
+            <h2>Eine kurze Aufgabe wählen</h2>
+          </div>
+          <p id="task-count" class="quiet"></p>
+        </div>
+        <div class="print-toolbar" aria-label="Wochenblatt drucken">
+          <label><input id="include-adult-help" type="checkbox"> Begleithinweise auf separater Seite</label>
+          <label>Sprache der Begleithinweise
+            <select id="print-help-language">
+              <option value="de">Deutsch</option>
+              <option value="pt">Português (BR)</option>
+            </select>
+          </label>
+          <button id="preview-week" class="button secondary" type="button">Wochenblatt ansehen</button>
+          <button id="print-week" class="button" type="button">Wochenblatt drucken</button>
+        </div>
+        <div id="week-picker" class="week-picker" aria-label="Pilotwoche auswählen"></div>
+        <div class="task-layout">
+          <div id="task-list" class="task-list" aria-live="polite"></div>
+          <article id="task-card" class="task-card" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section id="numbers-view" class="view" hidden>
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Optional · Zahlenraum 1–100</p>
+            <h2>Mit Punkten und Zahlen spielen</h2>
+          </div>
+        </div>
+        <div class="notice number-notice" aria-label="Pausenhinweis">
+          <strong>Eine Karte genügt.</strong>
+          <span>Wenn das Zählen mühsam wird: Pause machen, Punkte zeigen oder zusammen zählen. Auslassen ist in Ordnung.</span>
+        </div>
+        <div class="task-layout">
+          <div id="number-list" class="task-list" aria-live="polite"></div>
+          <article id="numbers-card" class="task-card" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section id="parent-view" class="view" hidden>
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Konkrete Beobachtungen · keine Noten</p>
+            <h2>Elternübersicht</h2>
+          </div>
+          <button id="recalculate" class="button secondary" type="button">Vorschläge aktualisieren</button>
+        </div>
+        <div class="notice parent-device-notice" aria-label="Gerätehinweis">
+          <strong>Auf demselben Gerät direkt sichtbar.</strong>
+          <span>Diese Ansicht zeigt den lokalen Stand dieses Browsers. Sie hat keine Anmeldung und keinen eigenen Zugangsschutz: Nur auf einem von Erwachsenen kontrollierten Gerät öffnen. Zwischen iPhone und PC gibt es keine automatische Synchronisierung: Nur ein lokaler JSON-Export und anschliessender Import überträgt einen Stand und ersetzt den bisherigen Stand auf dem Zielgerät.</span>
+        </div>
+        <div id="parent-summary" class="summary-grid"></div>
+        <section class="panel">
+          <h3>Passende nächste Aufgabe</h3>
+          <div id="next-task"></div>
+        </section>
+        <section class="panel">
+          <h3>Beobachtungen</h3>
+          <div id="observation-list"></div>
+        </section>
+      </section>
+
+      <section id="data-view" class="view" hidden>
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Lokaler Prototyp</p>
+            <h2>Lokalen Stand sichern oder zurücksetzen</h2>
+          </div>
+        </div>
+        <div class="panel data-panel">
+          <p>Dieses Release startet ohne vorbereitete Beobachtungen. Zurücksetzen löscht nur den lokalen Stand dieses Browsers; bereits exportierte Dateien bleiben bestehen.</p>
+          <p class="quiet">PC und iPhone führen je einen eigenen lokalen Stand. Für eine bewusste Übertragung: auf dem Ausgangsgerät exportieren, die JSON-Datei durch eine erwachsene Person übertragen und auf dem Zielgerät importieren. Der Import ersetzt dessen bisherigen lokalen Stand.</p>
+          <div class="button-row">
+            <button id="export-data" class="button" type="button">Diesen Stand exportieren</button>
+            <label class="button secondary file-button">Stand von anderem Gerät laden
+              <input id="import-data" type="file" accept="application/json">
+            </label>
+            <button id="reset-data" class="button danger" type="button">Lokalen Stand zurücksetzen</button>
+          </div>
+          <p id="storage-status" class="quiet" role="status"></p>
+        </div>
+        <section class="panel">
+          <h3>Für echte Nutzung noch offen</h3>
+          <ul>
+            <li>Der Unterrichtsanschluss bleibt bewusst offen: Dieses Release bietet nur generische, kindgerechte Übungsbeispiele.</li>
+            <li>Die Elternansicht ist auf demselben Gerät sichtbar. iPhone und PC bleiben getrennte lokale Speicherorte; Übertragung nur über Export und Import.</li>
+            <li>Vor echten Daten einen geschützten Speicher- und Sicherungsweg entscheiden; ein lokaler Schalter ist kein Zugangsschutz.</li>
+          </ul>
+        </section>
+      </section>
+    </main>
+
+    <section id="print-sheet" class="print-sheet" aria-live="polite"></section>
+
+    <template id="empty-state-template">
+      <p class="empty">Noch keine Beobachtungen. Das ist ausdrücklich keine negative Aussage.</p>
+    </template>
+    <script src="app.js"></script>
+  </body>
+</html>
+
+
