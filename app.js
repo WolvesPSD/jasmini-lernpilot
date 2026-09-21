@@ -83,13 +83,20 @@ function renderPrintSheet(preview=true) {
   const week = WEEK_INFO.find((item) => item.id === state.activeWeek); const tasks = printTasksForWeek(); const includeAdult = $('#include-adult-help').checked; const language = $('#print-help-language').value; const sheet = $('#print-sheet');
   sheet.classList.toggle('is-preview', preview);
   sheet.innerHTML = `<section class="print-child-page"><div class="print-header"><p class="print-kicker">Familien-Lernpilot · ${escapeHtml(week?.title || 'Woche')}</p><h1>${escapeHtml(week?.focus || 'Wochenblatt')}</h1><p>Wähle eine kurze Einheit. Du musst nicht alles machen. Wenn es schwierig wird, darfst du Pause machen oder Hilfe holen.</p></div>${tasks.map(printTaskMarkup).join('')}<p class="print-footer">Generisches Übungsangebot · kein bestätigter Unterrichtsanschluss · Aufgaben auf Papier nur einmal als Papierbearbeitung eintragen.</p></section>${includeAdult ? `<section class="print-adult-page"><div class="print-header"><p class="print-kicker">Begleithinweise · ${language === 'pt' ? 'Português (BR)' : 'Deutsch'}</p><h1>${escapeHtml(week?.title || 'Woche')}</h1><p>Diese separate Seite ist für Erwachsene. Sie enthält die vorgesehenen Hilfen und gegebenenfalls Lösungshinweise, nie neben dem Kinderblatt.</p></div>${tasks.map((task, index) => adultPrintMarkup(task, language, index)).join('')}</section>` : ''}<div class="print-preview-actions"><button id="close-print-preview" class="button secondary" type="button">Vorschau schliessen</button></div>`;
+  sheet.querySelector('.print-child-page')?.insertAdjacentHTML('beforeend', `<p class="print-page-number">Kinderblatt · Seite 1 von ${includeAdult ? '2' : '1'}</p>`);
+  if (includeAdult) sheet.querySelector('.print-adult-page')?.insertAdjacentHTML('beforeend', '<p class="print-page-number">Begleithinweise · Seite 2 von 2</p>');
   sheet.querySelector('#close-print-preview')?.addEventListener('click', () => { sheet.classList.remove('is-preview'); sheet.innerHTML=''; });
   if (preview) sheet.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 function printWeek() {
   renderPrintSheet(false);
-  if (typeof window.print === 'function') { $('#print-sheet').dataset.printMode = 'native'; window.print(); return; }
-  const sheet = $('#print-sheet'); sheet.classList.add('is-preview');
+  const sheet = $('#print-sheet');
+  if (typeof window.print === 'function') {
+    sheet.dataset.printMode = 'native';
+    window.print();
+    return;
+  }
+  sheet.classList.add('is-preview');
   sheet.dataset.printMode = 'preview-fallback';
   sheet.querySelector('.print-preview-actions')?.insertAdjacentHTML('afterbegin', '<p class="print-dialog-note" role="status">Dieser eingebettete Browser stellt keinen Druckdialog bereit. Die Vorschau ist vorbereitet: Bitte in einem normalen Desktop-Browser über „Drucken“ bzw. Strg+P fortfahren.</p>');
 }
@@ -180,4 +187,3 @@ function importData(event) { const file = event.target.files[0]; if (!file) retu
 function resetData() { if (!confirm('Alle lokalen Beobachtungen dieses Browsers löschen? Bereits exportierte Dateien bleiben erhalten.')) return; state.data = newData(); saveData(); renderProfileSelect(); renderTasks(); renderParent(); setStorageStatus('Lokaler Stand wurde zurückgesetzt.'); }
 function init() { state.data=loadData(); renderProfileSelect(); renderTasks(); renderNumbers(); renderParent(); document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => showView(button.dataset.view))); $('#profile-select').addEventListener('change', (event) => { state.data.activeProfileId=event.target.value; saveData(); renderTasks(); renderNumbers(); renderParent(); }); $('#recalculate').addEventListener('click', renderParent); $('#preview-week').addEventListener('click', () => renderPrintSheet(true)); $('#print-week').addEventListener('click', printWeek); $('#export-data').addEventListener('click', exportData); $('#import-data').addEventListener('change', importData); $('#reset-data').addEventListener('click', resetData); }
 init();
-
