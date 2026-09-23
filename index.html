@@ -41,7 +41,6 @@
           <p id="task-count" class="quiet"></p>
         </div>
         <div class="print-toolbar" aria-label="Wochenblatt drucken">
-          <label><input id="include-adult-help" type="checkbox"> Begleithinweise auf separater Seite</label>
           <label>Sprache der Begleithinweise
             <select id="print-help-language">
               <option value="de">Deutsch</option>
@@ -49,7 +48,8 @@
             </select>
           </label>
           <button id="preview-week" class="button secondary" type="button">Wochenblatt ansehen</button>
-          <button id="print-week" class="button" type="button">Wochenblatt drucken</button>
+          <button id="print-week" class="button" type="button">Kinderblatt drucken</button>
+          <button id="print-adult-help" class="button secondary" type="button">Begleithinweise separat drucken</button>
         </div>
         <div id="week-picker" class="week-picker" aria-label="Pilotwoche auswählen"></div>
         <div class="task-layout">
@@ -110,6 +110,7 @@
           <p class="quiet">PC und iPhone führen je einen eigenen lokalen Stand. Für eine bewusste Übertragung: auf dem Ausgangsgerät exportieren, die JSON-Datei durch eine erwachsene Person übertragen und auf dem Zielgerät importieren. Der Import ersetzt dessen bisherigen lokalen Stand.</p>
           <div class="button-row">
             <button id="export-data" class="button" type="button">Diesen Stand exportieren</button>
+            <button id="backup-before-import" class="button secondary" type="button">Sicherung vor Import herunterladen</button>
             <label class="button secondary file-button">Stand von anderem Gerät laden
               <input id="import-data" type="file" accept="application/json">
             </label>
@@ -136,5 +137,3 @@
     <script src="app.js"></script>
   </body>
 </html>
-
-
